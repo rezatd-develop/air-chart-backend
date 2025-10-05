@@ -1,10 +1,12 @@
 import File from "../../../models/fileModel.js";
+import { translations } from "../../../translations/translations.js";
+import { createResponseMessageClass } from "../../../utils/responseHelper.js";
 
 export const getFileServiceChart = async (req, res) => {
   try {
     const { id } = req.params;
     const file = await File.findById(id);
-    if (!file) return res.status(404).json({ message: "File not found" });
+    if (!file) return res.status(404).json(createResponseMessageClass(null, true, translations.fileNotFound));
 
     const rows = file.data;
 
@@ -24,17 +26,18 @@ export const getFileServiceChart = async (req, res) => {
           label: "Service Type Count",
           data: Object.values(counts),
           backgroundColor: [
-            "#FF6384", 
+            "#FF6384",
             "#36A2EB",
-            "#FFCE56"  
+            "#FFCE56"
           ]
         }
       ]
     };
 
-    res.json(data);
+    res.json(createResponseMessageClass(data, false, null));
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error generating service chart", error });
+    res.status(500).json(null, true, translations.errorGeneratingServiceChart);
   }
 };

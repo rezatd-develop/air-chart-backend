@@ -1,4 +1,6 @@
 import File from "../../../models/fileModel.js";
+import { translations } from "../../../translations/translations.js";
+import { createResponseMessageClass } from "../../../utils/responseHelper.js";
 import { filterAndGroupByTime } from "../../../utils/timeHelper.js";
 
 export const getFileChartData = async (req, res) => {
@@ -7,7 +9,7 @@ export const getFileChartData = async (req, res) => {
         const { range, start, end } = req.query;
 
         const file = await File.findById(id);
-        if (!file) return res.status(404).json({ message: "File not found" });
+        if (!file) return res.status(404).json(createResponseMessageClass(null, true, translations.fileNotFound));
 
         const { labels, values } = filterAndGroupByTime(file.data, {
             dateField: "تاریخ ثبت",
@@ -30,10 +32,11 @@ export const getFileChartData = async (req, res) => {
             ]
         };
 
-        res.json(data);
+        res.json(createResponseMessageClass(data, false, null));
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error generating chart", error });
+        res.status(500).json(createResponseMessageClass(null, true, translations.errorGeneratingChart));
     }
 };
 
@@ -41,7 +44,7 @@ export const getFilePurchaseByCompany = async (req, res) => {
     try {
         const { id } = req.params;
         const file = await File.findById(id);
-        if (!file) return res.status(404).json({ message: "File not found" });
+        if (!file) return res.status(404).json(createResponseMessageClass(null, true, translations.fileNotFound));
 
         const rows = file.data;
 
@@ -74,11 +77,12 @@ export const getFilePurchaseByCompany = async (req, res) => {
             ]
         };
 
-        res.json(data);
+        res.json(createResponseMessageClass(data, false, null));
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error generating company chart", error });
+        res.status(500).json(createResponseMessageClass(null, true, translations.errorGeneratingBookCountChart));
     }
 };
 
@@ -88,7 +92,7 @@ export const getFileProfitChart = async (req, res) => {
         const { range, start, end } = req.query;
 
         const file = await File.findById(id);
-        if (!file) return res.status(404).json({ message: "File not found" });
+        if (!file) return res.status(404).json(createResponseMessageClass(null, true, translations.fileNotFound));
 
         const { labels, values } = filterAndGroupByTime(file.data, {
             dateField: "تاریخ ثبت",
@@ -122,10 +126,10 @@ export const getFileProfitChart = async (req, res) => {
             ]
         };
 
-        res.json(data);
+        res.json(createResponseMessageClass(data, false, null));
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error generating profit chart", error });
+        res.status(500).json(createResponseMessageClass(null, true, translations.errorGeneratingProfitChart));
     }
 };
 
@@ -135,7 +139,7 @@ export const getFileDiscountChart = async (req, res) => {
         const { range, start, end } = req.query;
 
         const file = await File.findById(id);
-        if (!file) return res.status(404).json({ message: "File not found" });
+        if (!file) return res.status(404).json(createResponseMessageClass(null, true, translations.fileNotFound));
 
         const { labels, values } = filterAndGroupByTime(file.data, {
             dateField: "تاریخ ثبت",
@@ -182,8 +186,9 @@ export const getFileDiscountChart = async (req, res) => {
         };
 
         res.json(data);
+        res.json(createResponseMessageClass(data, false, null));
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error generating discount chart", error });
+        res.status(500).json(null, true, translations.errorGeneratingDiscountChart);
     }
 };

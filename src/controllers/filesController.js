@@ -13,11 +13,6 @@ export const uploadFile = async (req, res) => {
         const sheetName = workbook.SheetNames[0];
         const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-        const savedFile = await File.create({
-            originalName: req.file.originalname,
-            data: sheetData,
-        });
-
         res.status(201).json(createResponseMessageClass(null, false, translations.fileUpdatedSuccessfully));
     } catch (error) {
         console.error("Upload error:", error);
