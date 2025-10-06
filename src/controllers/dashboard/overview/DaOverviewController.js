@@ -185,7 +185,6 @@ export const getFileDiscountChart = async (req, res) => {
             ]
         };
 
-        res.json(data);
         res.json(createResponseMessageClass(data, false, null));
     } catch (error) {
         console.error(error);

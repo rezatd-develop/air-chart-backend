@@ -2,19 +2,27 @@ import moment from "moment-jalaali";
 
 export const filterAndGroupByTime = (rows, { dateField, range = "daily", start, end, valueField }) => {
 
-    const filtered = rows.filter(item => {
-    const date = moment(item[dateField], "jYYYY-jMM-jDD");
-    const afterStart = start ? date.isSameOrAfter(moment(start, "jYYYY-jMM-jDD")) : true;
-    const beforeEnd = end ? date.isSameOrBefore(moment(end, "jYYYY-jMM-jDD")) : true;
+  const startDate = start ? moment(start, "YYYY-MM-DD") : null;
+  const endDate = end ? moment(end, "YYYY-MM-DD") : null;
+
+  const filtered = rows.filter(item => {
+    const date = moment(item[dateField], "jYYYY-jMM-jDD").format("YYYY-MM-DD");
+    const dateMoment = moment(date, "YYYY-MM-DD");
+
+    const afterStart = startDate ? dateMoment.isSameOrAfter(startDate, "day") : true;
+    const beforeEnd = endDate ? dateMoment.isSameOrBefore(endDate, "day") : true;
+
     return afterStart && beforeEnd;
   });
 
   const grouped = {};
   filtered.forEach(item => {
     let key;
-    if (range === "yearly") key = moment(item[dateField], "jYYYY-jMM-jDD").format("jYYYY");
-    else if (range === "monthly") key = moment(item[dateField], "jYYYY-jMM-jDD").format("jYYYY-jMM");
-    else key = moment(item[dateField], "jYYYY-jMM-jDD").format("jYYYY-jMM-jDD");
+    const date = moment(item[dateField], "jYYYY-jMM-jDD");
+
+    if (range === "yearly") key = date.format("jYYYY");
+    else if (range === "monthly") key = date.format("jYYYY-jMM");
+    else key = date.format("jYYYY-jMM-jDD");
 
     const value = valueField ? valueField(item) : 1;
     grouped[key] = (grouped[key] || 0) + value;
