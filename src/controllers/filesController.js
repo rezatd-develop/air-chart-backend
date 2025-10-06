@@ -4,27 +4,31 @@ import { createResponseMessageClass } from '../utils/responseHelper.js';
 import { translations } from "../translations/translations.js";
 
 export const uploadFile = async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ message: "No file uploaded" });
-        }
+  try {
+      if (!req.file) {
+          return res
+              .status(400)
+              .json(createResponseMessageClass(null, true, "هیچ فایلی آپلود نشده است"));
+      }
 
-        const workbook = xlsx.readFile(req.file.path);
-        const sheetName = workbook.SheetNames[0];
-        const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+      const workbook = xlsx.readFile(req.file.path);
+      const sheetName = workbook.SheetNames[0];
+      const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-        const savedFile = await File.create({
-            originalName: req.file.originalname,
-            data: sheetData,
-        });
+      const savedFile = await File.create({
+          originalName: req.file.originalname,
+          data: sheetData,
+      });
 
-        res
-            .status(201)
-            .json(createResponseMessageClass(savedFile, false, translations.fileUpdatedSuccessfully));
-    } catch (error) {
-        console.error("Upload error:", error);
-        res.status(500).json({ message: "File upload failed", error });
-    }
+      res
+          .status(201)
+          .json(createResponseMessageClass(savedFile._id, false, translations.fileUpdatedSuccessfully));
+  } catch (error) {
+      console.error("Upload error:", error);
+      res
+          .status(500)
+          .json(createResponseMessageClass(null, true, "خطا در آپلود فایل"));
+  }
 };
 
 

@@ -9,7 +9,7 @@ export const getFileChartData = async (req, res) => {
         const { range, start, end } = req.query;
 
         const file = await File.findById(id);
-        if (!file) return res.status(404).json(createResponseMessageClass(null, true, translations.fileNotFound));
+        if (!file) return res.status(200).json(createResponseMessageClass(null, true, translations.fileNotFound));
 
         const { labels, values } = filterAndGroupByTime(file.data, {
             dateField: "تاریخ ثبت",
@@ -44,7 +44,7 @@ export const getFilePurchaseByCompany = async (req, res) => {
     try {
         const { id } = req.params;
         const file = await File.findById(id);
-        if (!file) return res.status(404).json(createResponseMessageClass(null, true, translations.fileNotFound));
+        if (!file) return res.status(200).json(createResponseMessageClass(null, true, translations.fileNotFound));
 
         const rows = file.data;
 
@@ -92,7 +92,7 @@ export const getFileProfitChart = async (req, res) => {
         const { range, start, end } = req.query;
 
         const file = await File.findById(id);
-        if (!file) return res.status(404).json(createResponseMessageClass(null, true, translations.fileNotFound));
+        if (!file) return res.status(200).json(createResponseMessageClass(null, true, translations.fileNotFound));
 
         const { labels, values } = filterAndGroupByTime(file.data, {
             dateField: "تاریخ ثبت",
