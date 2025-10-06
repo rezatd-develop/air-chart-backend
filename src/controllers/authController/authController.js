@@ -35,7 +35,7 @@ export const signIn = async (req, res) => {
         const { username, password } = req.body;
 
         const user = await User.findOne({ username });
-        if (!user) return res.status(404).json(createResponseMessageClass(null, true, translations.userNotFound));
+        if (!user) return res.status(200).json(createResponseMessageClass(null, true, translations.userNotFound));
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) return res.status(401).json(createResponseMessageClass(null, true, translations.invalidCredentials));
