@@ -9,7 +9,7 @@ import { verifyToken } from "./middlewares/authMiddleware.js";
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:4000", 
+  origin: "http://167.88.165.4:3000", 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
