@@ -37,7 +37,6 @@ export const getFileServiceChart = async (req, res) => {
     res.json(createResponseMessageClass(data, false, null));
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error generating service chart", error });
     res.status(500).json(null, true, translations.errorGeneratingServiceChart);
   }
 };

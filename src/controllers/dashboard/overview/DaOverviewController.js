@@ -35,7 +35,6 @@ export const getFileChartData = async (req, res) => {
         res.json(createResponseMessageClass(data, false, null));
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error generating chart", error });
         res.status(500).json(createResponseMessageClass(null, true, translations.errorGeneratingChart));
     }
 };
@@ -81,7 +80,6 @@ export const getFilePurchaseByCompany = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error generating company chart", error });
         res.status(500).json(createResponseMessageClass(null, true, translations.errorGeneratingBookCountChart));
     }
 };
