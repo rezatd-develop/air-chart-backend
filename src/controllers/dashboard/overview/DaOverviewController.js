@@ -189,3 +189,47 @@ export const getFileDiscountChart = async (req, res) => {
         res.status(500).json(null, true, translations.errorGeneratingDiscountChart);
     }
 };
+
+
+export const getSellerSales = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { start, end } = req.query;
+
+        const file = await File.findById(id);
+        if (!file)
+            return res.status(200).json(createResponseMessageClass(null, true, translations.fileNotFound));
+
+        let rows = file.data;
+
+        if (start && end) {
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+            rows = rows.filter(row => {
+                const date = new Date(row["تاریخ ثبت"]);
+                return date >= startDate && date <= endDate;
+            });
+        }
+
+        const sellerSales = {};
+        rows.forEach(row => {
+            const seller = row["seller"] || row["نام فروشنده"] || "ناشناس";
+            const amount = Number(row["خرید کل"]) || 0;
+            if (!sellerSales[seller]) sellerSales[seller] = 0;
+            sellerSales[seller] += amount;
+        });
+
+        const result = Object.entries(sellerSales).map(([name, amount]) => ({
+            name,
+            amount
+        }));
+
+        result.sort((a, b) => b.amount - a.amount);
+
+        res.json(createResponseMessageClass(result, false, null));
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(createResponseMessageClass(null, true, translations.errorGeneratingChart));
+    }
+};
