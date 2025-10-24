@@ -11,7 +11,7 @@ import { getAllTotals } from "./controllers/statics/getTotals.js";
 const app = express();
 
 app.use(cors({
-  origin: "*",
+  origin: "http://167.88.165.4:3000", 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
